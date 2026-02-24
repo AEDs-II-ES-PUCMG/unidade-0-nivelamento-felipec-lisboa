@@ -2,10 +2,10 @@ import java.text.NumberFormat;
 
 public class Produto {
 	
-	private static final double MARGEM_PADRAO = 0.2;
-	private String descricao;
-	private double precoCusto;
-	private double margemLucro;
+	protected static final double MARGEM_PADRAO = 0.2;
+	protected String descricao;
+	protected double precoCusto;
+	protected double margemLucro;
 	
 	/**
      * Inicializador privado. Os valores default, em caso de erro, são:
