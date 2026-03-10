@@ -58,10 +58,54 @@ public class Comercio {
      * @return Um vetor com os produtos carregados, ou vazio em caso de problemas de leitura.
      */
     static Produto[] lerProdutos(String nomeArquivoDados) {
+        // Scanner responsável por ler o arquivo texto
+        Scanner arquivo = null;
+        int i, numProdutos;
+        String linha;
+        Produto produto;
+        // Vetor temporário para armazenar apenas os produtos lidos
+        Produto[] produtoCadastrados = new Produto[MAX_NOVOS_PRODUTOS];
+
+        try{
+            // Abre o arquivo de dados usando UTF-8
+            arquivo = new Scanner(new File(nomeArquivoDados), Charset.forName("UTF-8"));
+
+            // Primeira linha contém a quantidade de produtos registrados
+            numProdutos = Integer.parseInt(arquivo.nextLine());
+
+            // Lê até numProdutos linhas ou até atingir o limite de MAX_NOVOS_PRODUTOS
+            for(i=0;(i<numProdutos && i<MAX_NOVOS_PRODUTOS); i++){
+                linha = arquivo.nextLine();
+                produto = Produto.criarDoTexto(linha); // Converte a linha CSV em um objeto Produto
+                produtoCadastrados[i] = produto;
+            }
+            // Atualiza o contador de produtos carregados
+            quantosProdutos = i;
+
+        }catch (IOException excecaoArquivo){
+            // Em caso de erro na leitura, considera que nenhum produto foi carregado
+            produtoCadastrados = null;
+            quantosProdutos = 0;
+        }finally{
+            // Fecha o arquivo se ele tiver sido aberto
+            if (arquivo != null) {
+                arquivo.close();
+            }
+        }
+
+        // Monta o vetor final de produtos, com espaço extra para novos cadastros
         Produto[] vetorProdutos;
-        //TO DO
+        if (produtoCadastrados == null || quantosProdutos == 0) {
+            vetorProdutos = new Produto[0];
+        } else {
+            vetorProdutos = new Produto[quantosProdutos + MAX_NOVOS_PRODUTOS];
+            for (i = 0; i < quantosProdutos; i++) {
+                vetorProdutos[i] = produtoCadastrados[i];
+            }
+        }
         return vetorProdutos;
     }
+
 
     /** Lista todos os produtos cadastrados, numerados, um por linha */
     static void listarTodosOsProdutos(){
